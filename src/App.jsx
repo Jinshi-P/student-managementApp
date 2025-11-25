@@ -12,13 +12,19 @@ function App() {
 
   const handleAddButton=(newStudent)=>{
         
-        setStudents([...students,newStudent])
+        setStudents([newStudent,...students])
     }
+
+const handleDletebtn=(studentId)=>{
+ const updatedStudents=students.filter((student)=>
+student.id!==studentId)
+ setStudents([...updatedStudents])
+}
 
   return (
     <div>
       <ListInput handleAddButton={handleAddButton} />
-      <ListData students={students} />
+      <ListData students={students}  handleDletebtn={handleDletebtn}/>
     </div>
   );
 }

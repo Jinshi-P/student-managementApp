@@ -1,8 +1,8 @@
 
-function ListItem({name}){
+function ListItem({student,handleDletebtn}){
 return (
     <div>    
-      {name}<button>delete</button>
+      {student?.name}<button onClick={()=>handleDletebtn(student.id)}>Delete</button>
    </div>
 )}
 export default ListItem

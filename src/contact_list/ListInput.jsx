@@ -15,6 +15,7 @@ const [input,setInput]=useState("")
     return(
         <div>
         <input value={input} type="text" placeholder="Enter your name"  onChange={handleInput}/>
+    
         <button onClick={()=>{handleAddButton(
             {
             id:crypto.randomUUID(),
