@@ -38,7 +38,7 @@ const nameref=useRef("")
 
   return (
     <div>
-      <ListInput handleAddButton={handleAddButton} contactRef={contactRef} nameref={nameref} />
+      <ListInput handleAddButton={handleAddButton} contactRef={contactRef} ref={nameref} />
       <ListData students={students}  handleDletebtn={handleDletebtn}/>
     </div>
   );
