@@ -1,10 +1,15 @@
 import ListItem from "./ListItem"
 
-function ListData({students,handleDletebtn}){
+function ListData({students,handleDletebtn,searchInput,searchDisplay}){
 return (
 !students.length
 ? <p>{"No Contacts Found"}</p>
-:students?.map((student)=>{
+:
+searchInput ? searchDisplay?.map((student)=>{
+   return <ListItem key={student.id} student={student} handleDletebtn={handleDletebtn}/>
+})
+:
+students?.map((student)=>{
    return <ListItem key={student.id} student={student} handleDletebtn={handleDletebtn}/>
 }))
 }
