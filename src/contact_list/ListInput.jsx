@@ -1,79 +1,103 @@
-import React, { useCallback, useState } from "react";
+import {forwardRef, useCallback, useState } from "react";
 import Input from "../components/input";
 import { IoIosPersonAdd } from "react-icons/io";
-const ListInput = React.forwardRef(function ListInput(
-  { handleAddButton, contactRef,searchInput,setSearchInput},
+
+const ListInput =forwardRef(function ListInput(
+  { handleAddButton, contactRef, searchInput, setSearchInput},
   ref
 ) {
-  console.log("listinput is running")
   const [input, setInput] = useState("");
-
-  const handleInput = useCallback((event)=>{
-   
-    setInput(event.target.value);
   
-  },[]);
+  const [inputError, setInputError] = useState("");
+  const [contacterror, setcontacterror] = useState("");
 
-  const handleSearch =useCallback((event)=>{
+  const handleAddClick=()=>{
+
+    if(input===""){
+      setInputError("Name required")
+    }else{setInputError("")}
+     if(contactRef.current.value===""){
+      setcontacterror("Contact required")
+      
+    }else{setcontacterror("")}
+
+    if( input && contactRef.current.value){
+      setInputError("")
+      setcontacterror("")
+       handleAddButton(
+                {
+                  id: crypto.randomUUID(),
+                  name: input,
+                  contact: contactRef.current.value,
+                },
+                setInput(""),
+                (contactRef.current.value = "")
+              );
+    }
+
+  }
+  
+
+  const handleInput = useCallback((event) => {
     
-setSearchInput(event.target.value)
-   }
-  ,[])
+    setInput(event.target.value);
+  }, []);
+
+  const handleSearch = useCallback((event) => {
+    setSearchInput(event.target.value);
+  }, []);
 
   return (
     <div className="listinput">
-      {/* <input
-        value={input}
+      <div className="input">
+        <div className="inputs" style={{display:"flex",flexDirection:"row"}}>
+          <div style={{display:"flex",flexDirection:"column"}}>
+           <Input
+            value={input}
+            name="name"
+            className="inputbox"
+            type="text"
+            placeholder="Enter your name . . ."
+            onChange={handleInput}
+            ref={ref}
+            error={inputError}
+            
+          />
+          <span style={{color:"red"}}>{inputError}</span>
+
+          </div>
+         
+        <div style={{display:"flex",flexDirection:"column"}}> 
+          <Input
+            type="tel"
+            name="contact"
+            className="inputbox"
+            ref={contactRef}
+            placeholder="Enter your contact number . . ."
+            error={contacterror}
+          />
+           <span style={{color:"red"}}>{contacterror}</span></div>
+         
+        </div>
+        <div style={{alignContent:"center"}}>
+          <button
+            className="addbtn"
+            onClick={handleAddClick }
+          >
+            <IoIosPersonAdd />
+          </button>
+          
+        </div>
+      </div>
+
+      <Input
         type="text"
-        ref={ref}
-        placeholder="Enter your name . . ."
-        onChange={handleInput}
+        name="search"
+        className="searchInput"
+        value={searchInput}
+        placeholder="Search here . . ."
+        onChange={handleSearch}
       />
-      <input
-        type="tel"
-        ref={contactRef}
-        placeholder="Enter your contact number . . ."
-      /> */}
-    <div className="input">
- <Input value={input}
-      name="name"
-      className="inputbox"
-       type="text"
-       placeholder="Enter your name . . ." 
-       onChange={handleInput}
-      ref={ref}/>
-
-      <Input type="tel"
-      name="contact"
-      className="inputbox"
-        ref={contactRef}
-        placeholder="Enter your contact number . . ."/>
-
-      <button
-      className="addbtn"
-        onClick={() => {
-          handleAddButton(
-            {
-              id: crypto.randomUUID(),
-              name: input,
-              contact: contactRef.current.value,
-            },
-            setInput(""),
-            (contactRef.current.value = "")
-          );
-        }}>
-        <IoIosPersonAdd />
-      </button>
-    </div>
-     
-
-    <Input type="text"
-    name="search"
-    className="searchInput"
-    value={searchInput}
-     placeholder="Search here . . ."
-     onChange={handleSearch}
-     />
     </div>
   );
 });
