@@ -1,21 +1,46 @@
-import { createContext } from "react";
-import { useState, useRef, useEffect } from "react";
+import { createContext, useReducer, useRef, useEffect } from "react";
 
 const AppContext = createContext();
-export const AppProvider = ({ children }) => {
-  let studentsData = [
+let studentsData = {
+  search: "",
+  students: [
     { id: "jsp", name: "Jinshi", contact: 9946525896 },
     { id: "yra", name: "Yara", contact: 9946525896 },
     { id: "aym", name: "Ayman", contact: 9946525896 },
     { id: "sfd", name: "Saifudheen", contact: 9946525896 },
-  ];
-  const [students, setStudents] = useState(
-    studentsData.sort((a, b) =>
-      a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-    )
-  );
+  ].sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase())),
+};
 
-  const [searchInput, setSearchInput] = useState("");
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "add-student":
+      return {
+        ...state,
+        students: [...state.students, action?.payload].sort((a, b) =>
+          a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+        ),
+      };
+
+    case "delete-student":
+      return {
+        ...state,
+        students: state?.students?.filter(
+          (student) => student.id !== action.payload
+        ),
+      };
+
+    case "search":
+      return {...state,search:action?.payload};
+
+    default:
+      return state;
+  }
+};
+export const AppProvider = ({ children }) => {
+  // const [students, setStudents] = useState(studentsData);
+  const [state, dispatch] = useReducer(reducer, studentsData);
+
+  //const [searchInput, setSearchInput] = useState("");
   const contactRef = useRef();
   const nameref = useRef("");
 
@@ -26,12 +51,10 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        searchInput,
-        setSearchInput,
         contactRef,
         nameref,
-        students,
-        setStudents,
+        dispatch,
+        state,
       }}
     >
       {children}

@@ -1,11 +1,10 @@
-import { forwardRef, useCallback, useState } from "react";
+import { useCallback, useState, useContext } from "react";
 import Input from "../components/input";
 import { IoIosPersonAdd } from "react-icons/io";
-import { useContext } from "react";
 import AppContext from "../context/AppContext";
 
 function ListInput() {
-  const { contactRef, searchInput, setSearchInput, nameref ,students,setStudents} =
+  const { contactRef, state, nameref,dispatch} =
     useContext(AppContext);
   const [input, setInput] = useState("");
 
@@ -13,7 +12,7 @@ function ListInput() {
   const [contacterror, setcontacterror] = useState("");
 
   const handleAddClick = () => {
-    if (input === "") {
+    if (input=="") {
       setInputError("Name required");
     } else {
       setInputError("");
@@ -33,11 +32,12 @@ function ListInput() {
           contact: contactRef.current.value,
         }
  
-    setStudents(
-      [newStudent, ...students].sort((a, b) =>
-        a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-      )
-    );
+    // setStudents(
+    //   [newStudent, ...students].sort((a, b) =>
+    //     a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+    //   )
+    // );
+    dispatch({type:"add-student",payload:newStudent})
     contactRef.current.value;
         setInput(""),
         (contactRef.current.value = "")
@@ -50,7 +50,8 @@ function ListInput() {
   }, []);
 
   const handleSearch = useCallback((event) => {
-    setSearchInput(event.target.value);
+    dispatch({type:"search",payload:event.target.value})
+   // setSearchInput(event.target.value);
   }, []);
 
   return (
@@ -97,7 +98,7 @@ function ListInput() {
         type="text"
         name="search"
         className="searchInput"
-        value={searchInput}
+        value={state?.search}
         placeholder="Search here . . ."
         onChange={handleSearch}
       />

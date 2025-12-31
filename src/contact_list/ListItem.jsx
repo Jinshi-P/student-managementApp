@@ -2,12 +2,17 @@ import { useContext } from "react";
 import { MdDelete } from "react-icons/md";
 import AppContext from "../context/AppContext";
 function ListItem({ student }) {
-  const { students, setStudents } = useContext(AppContext);
+
+  const {dispatch } = useContext(AppContext);
+
   const handleDletebtn = (studentId) => {
-    const updatedStudents = students?.filter(
-      (student) => student?.id !== studentId
-    );
-    setStudents([...updatedStudents]);
+   dispatch({type:"delete-student",payload:studentId})
+  
+   
+   //  const updatedStudents = students?.filter(
+   //    (student) => student?.id !== studentId
+   //  );
+   //  setStudents([...updatedStudents]);
   };
   return (
     <>
@@ -17,7 +22,7 @@ function ListItem({ student }) {
           justifyContent: "space-between",
           border: ".5px solid white",
           padding: ".5em",
-          scrollTop: "",
+   
         }}
       >
         <div>

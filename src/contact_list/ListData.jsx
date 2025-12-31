@@ -3,12 +3,12 @@ import ListItem from "./ListItem"
 import { useContext } from "react"
 
 function ListData(){
-   const {students,searchInput}=useContext(AppContext)
+   const {state}=useContext(AppContext)
 return (
-students.length>0
+state?.students?.length>0
 ?
-(students?.filter((student) =>
-            student?.name?.toLowerCase().includes(searchInput?.toLowerCase())
+(state?.students?.filter((student) =>
+            student?.name?.toLowerCase().includes(state?.search?.toLowerCase())
           )
 ?.map((student)=>{
    return <ListItem key={student.id} student={student}/>
