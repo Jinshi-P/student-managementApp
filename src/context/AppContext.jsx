@@ -1,4 +1,4 @@
-import { createContext, useReducer, useRef, useEffect } from "react";
+import { createContext, useReducer } from "react";
 
 const AppContext = createContext();
 let studentsData = {
@@ -30,29 +30,20 @@ const reducer = (state, action) => {
       };
 
     case "search":
-      return {...state,search:action?.payload};
+      return { ...state, search: action?.payload };
 
     default:
       return state;
   }
 };
 export const AppProvider = ({ children }) => {
-  // const [students, setStudents] = useState(studentsData);
   const [state, dispatch] = useReducer(reducer, studentsData);
 
-  //const [searchInput, setSearchInput] = useState("");
-  const contactRef = useRef();
-  const nameref = useRef("");
 
-  useEffect(() => {
-    nameref.current.focus();
-  }, []);
 
   return (
     <AppContext.Provider
       value={{
-        contactRef,
-        nameref,
         dispatch,
         state,
       }}

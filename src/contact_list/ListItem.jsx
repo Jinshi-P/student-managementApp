@@ -1,18 +1,10 @@
-import { useContext } from "react";
 import { MdDelete } from "react-icons/md";
-import AppContext from "../context/AppContext";
+import useAppContext from "../hooks/useAppContext";
 function ListItem({ student }) {
-
-  const {dispatch } = useContext(AppContext);
+  const { dispatch } = useAppContext();
 
   const handleDletebtn = (studentId) => {
-   dispatch({type:"delete-student",payload:studentId})
-  
-   
-   //  const updatedStudents = students?.filter(
-   //    (student) => student?.id !== studentId
-   //  );
-   //  setStudents([...updatedStudents]);
+    dispatch({ type: "delete-student", payload: studentId });
   };
   return (
     <>
@@ -22,7 +14,6 @@ function ListItem({ student }) {
           justifyContent: "space-between",
           border: ".5px solid white",
           padding: ".5em",
-   
         }}
       >
         <div>

@@ -1,18 +1,24 @@
-import { useCallback, useState, useContext } from "react";
+import { useCallback, useState,useRef ,useEffect} from "react";
 import Input from "../components/input";
 import { IoIosPersonAdd } from "react-icons/io";
-import AppContext from "../context/AppContext";
+import useAppContext from "../hooks/useAppContext";
 
 function ListInput() {
-  const { contactRef, state, nameref,dispatch} =
-    useContext(AppContext);
+  const { state, dispatch } = useAppContext();
   const [input, setInput] = useState("");
 
   const [inputError, setInputError] = useState("");
   const [contacterror, setcontacterror] = useState("");
 
+  const contactRef = useRef();
+  const nameref = useRef("");
+
+  useEffect(() => {
+    nameref.current.focus();
+  }, []);
+
   const handleAddClick = () => {
-    if (input=="") {
+    if (input == "") {
       setInputError("Name required");
     } else {
       setInputError("");
@@ -26,22 +32,15 @@ function ListInput() {
     if (input && contactRef.current.value) {
       setInputError("");
       setcontacterror("");
-      const newStudent= {
-          id: crypto.randomUUID(),
-          name: input,
-          contact: contactRef.current.value,
-        }
- 
-    // setStudents(
-    //   [newStudent, ...students].sort((a, b) =>
-    //     a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-    //   )
-    // );
-    dispatch({type:"add-student",payload:newStudent})
-    contactRef.current.value;
-        setInput(""),
-        (contactRef.current.value = "")
-      
+      const newStudent = {
+        id: crypto.randomUUID(),
+        name: input,
+        contact: contactRef.current.value,
+      };
+
+      dispatch({ type: "add-student", payload: newStudent });
+      contactRef.current.value;
+      setInput(""), (contactRef.current.value = "");
     }
   };
 
@@ -50,8 +49,7 @@ function ListInput() {
   }, []);
 
   const handleSearch = useCallback((event) => {
-    dispatch({type:"search",payload:event.target.value})
-   // setSearchInput(event.target.value);
+    dispatch({ type: "search", payload: event.target.value });
   }, []);
 
   return (
@@ -88,7 +86,11 @@ function ListInput() {
           </div>
         </div>
         <div style={{ alignContent: "center" }}>
-          <button className="addbtn" title="Add contact" onClick={handleAddClick}>
+          <button
+            className="addbtn"
+            title="Add contact"
+            onClick={handleAddClick}
+          >
             <IoIosPersonAdd />
           </button>
         </div>
