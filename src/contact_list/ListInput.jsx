@@ -1,4 +1,4 @@
-import { useCallback, useState,useRef ,useEffect} from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import Input from "../components/input";
 import { IoIosPersonAdd } from "react-icons/io";
 import useAppContext from "../hooks/useAppContext";
@@ -6,16 +6,16 @@ import useAppContext from "../hooks/useAppContext";
 function ListInput() {
   const { state, dispatch } = useAppContext();
   const [input, setInput] = useState("");
+  const [contactInput, setContactInput] = useState("");
 
   const [inputError, setInputError] = useState("");
   const [contacterror, setcontacterror] = useState("");
 
-  const contactRef = useRef();
   const nameref = useRef("");
 
   useEffect(() => {
     nameref.current.focus();
-  }, []);
+  }, [state?.students]);
 
   const handleAddClick = () => {
     if (input == "") {
@@ -23,29 +23,33 @@ function ListInput() {
     } else {
       setInputError("");
     }
-    if (contactRef.current.value === "") {
+    if (contactInput === "") {
       setcontacterror("Contact required");
     } else {
       setcontacterror("");
     }
 
-    if (input && contactRef.current.value) {
+    if (input && contactInput) {
       setInputError("");
       setcontacterror("");
       const newStudent = {
         id: crypto.randomUUID(),
         name: input,
-        contact: contactRef.current.value,
+        contact: contactInput,
       };
 
       dispatch({ type: "add-student", payload: newStudent });
-      contactRef.current.value;
-      setInput(""), (contactRef.current.value = "");
+      setInput(""), setContactInput("");
     }
   };
 
   const handleInput = useCallback((event) => {
-    setInput(event.target.value);
+    const { value, name } = event.target;
+    if (name === "name") {
+      setInput(value);
+    } else if (name === "contact") {
+      setContactInput(value);
+    }
   }, []);
 
   const handleSearch = useCallback((event) => {
@@ -61,13 +65,13 @@ function ListInput() {
         >
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Input
-              value={input}
-              name="name"
-              className="inputbox"
               type="text"
+              name="name"
               placeholder="Enter your name . . ."
-              onChange={handleInput}
               ref={nameref}
+              value={input}
+              onChange={handleInput}
+              className="inputbox"
               error={inputError}
             />
             <span style={{ color: "red" }}>{inputError}</span>
@@ -77,9 +81,10 @@ function ListInput() {
             <Input
               type="tel"
               name="contact"
-              className="inputbox"
-              ref={contactRef}
               placeholder="Enter your contact number . . ."
+              value={contactInput}
+              onChange={handleInput}
+              className="inputbox"
               error={contacterror}
             />
             <span style={{ color: "red" }}>{contacterror}</span>
