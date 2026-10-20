@@ -8,17 +8,10 @@ function ListItem({ student }) {
   };
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          border: ".5px solid white",
-          padding: ".5em",
-        }}
-      >
+      <div className="contact-list">
         <div>
-          <h4>{student?.name}</h4>
-          <p>{student?.contact}</p>
+          <h4 className="contact-list-name">{student?.name}</h4>
+          <p className="contact-list-contact">{student?.contact}</p>
         </div>
         <div>
           {" "}

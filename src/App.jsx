@@ -6,7 +6,7 @@ function App() {
     <div className="container">
       <div className="element">
         <ListInput />
-        <ListData />
+        <ListData /> 
       </div>
     </div>
   );

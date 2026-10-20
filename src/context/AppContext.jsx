@@ -4,10 +4,10 @@ const AppContext = createContext();
 let studentsData = {
   search: "",
   students: [
-    { id: "jsp", name: "Jinshi", contact: 9946525896 },
-    { id: "yra", name: "Yara", contact: 9946525896 },
-    { id: "aym", name: "Ayman", contact: 9946525896 },
-    { id: "sfd", name: "Saifudheen", contact: 9946525896 },
+    { id: "jsp", name: "Jinshi", contact: 1234567890 },
+    { id: "yra", name: "Yara", contact: 1234567890 },
+    { id: "aym", name: "Ayman", contact: 1234567890 },
+    { id: "sfd", name: "Saifudheen", contact: 1234567890 },
   ].sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase())),
 };
 
@@ -16,8 +16,8 @@ const reducer = (state, action) => {
     case "add-student":
       return {
         ...state,
-        students: [...state.students, action?.payload].sort((a, b) =>
-          a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+        students: [...state.students, action?.payload]?.sort((a, b) =>
+        a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
         ),
       };
 

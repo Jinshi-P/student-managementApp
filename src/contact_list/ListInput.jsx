@@ -5,52 +5,53 @@ import useAppContext from "../hooks/useAppContext";
 
 function ListInput() {
   const { state, dispatch } = useAppContext();
-  const [input, setInput] = useState("");
-  const [contactInput, setContactInput] = useState("");
-
-  const [inputError, setInputError] = useState("");
-  const [contacterror, setcontacterror] = useState("");
+  const [formValues, setFormValues] = useState({
+    name: "",
+    contact: "",
+  });
+  const [formError, setFormError] = useState({});
 
   const nameref = useRef("");
 
   useEffect(() => {
     nameref.current.focus();
-  }, [state?.students]);
-
-  const handleAddClick = () => {
-    if (input == "") {
-      setInputError("Name required");
-    } else {
-      setInputError("");
-    }
-    if (contactInput === "") {
-      setcontacterror("Contact required");
-    } else {
-      setcontacterror("");
-    }
-
-    if (input && contactInput) {
-      setInputError("");
-      setcontacterror("");
-      const newStudent = {
-        id: crypto.randomUUID(),
-        name: input,
-        contact: contactInput,
-      };
-
-      dispatch({ type: "add-student", payload: newStudent });
-      setInput(""), setContactInput("");
-    }
-  };
+  }, []);
 
   const handleInput = useCallback((event) => {
     const { value, name } = event.target;
-    if (name === "name") {
-      setInput(value);
-    } else if (name === "contact") {
-      setContactInput(value);
-    }
+
+    setFormValues((prev) => ({ ...prev, [name]: value }));
+    setFormError((prev) => ({
+      ...prev,
+      [name]: value ? "" : `${name} required`,
+    }));
   }, []);
+
+  const validateFormValues = () => {
+    const errors = {};
+    Object.keys(formValues)?.forEach((key) => {
+      if (!formValues[key]) {
+        errors[key] = `${key} is required`;
+      }
+    });
+    setFormError(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const resetState = () => {
+    setFormError({});
+    setFormValues({ name: "", contact: "" });
+  };
+
+  const handleAddClick = () => {
+    if (validateFormValues()) {
+      dispatch({
+        type: "add-student",
+        payload: { ...formValues, id: crypto.randomUUID() },
+      });
+      resetState();
+    }
+  };
 
   const handleSearch = useCallback((event) => {
     dispatch({ type: "search", payload: event.target.value });
@@ -59,38 +60,29 @@ function ListInput() {
   return (
     <div className="listinput">
       <div className="input">
-        <div
-          className="inputs"
-          style={{ display: "flex", flexDirection: "row" }}
-        >
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <Input
-              type="text"
-              name="name"
-              placeholder="Enter your name . . ."
-              ref={nameref}
-              value={input}
-              onChange={handleInput}
-              className="inputbox"
-              error={inputError}
-            />
-            <span style={{ color: "red" }}>{inputError}</span>
-          </div>
+        <div className="inputs">
+          <Input
+            type="text"
+            name="name"
+            placeholder="Enter your name . . ."
+            ref={nameref}
+            value={formValues?.name || ""}
+            onChange={handleInput}
+            className="inputbox"
+            error={formError?.name}
+          />
 
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <Input
-              type="tel"
-              name="contact"
-              placeholder="Enter your contact number . . ."
-              value={contactInput}
-              onChange={handleInput}
-              className="inputbox"
-              error={contacterror}
-            />
-            <span style={{ color: "red" }}>{contacterror}</span>
-          </div>
+          <Input
+            type="tel"
+            name="contact"
+            placeholder="Enter your contact number . . ."
+            value={formValues?.contact || ""}
+            onChange={handleInput}
+            className="inputbox"
+            error={formError?.contact}
+          />
         </div>
-        <div style={{ alignContent: "center" }}>
+        <div>
           <button
             className="addbtn"
             title="Add contact"
